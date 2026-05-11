@@ -1,0 +1,39 @@
+# secrets / user config — NEVER commit
+miner.toml
+.env
+.env.*
+!.env.example
+keys.txt
+*.key
+keys*.txt
+*.pem
+hash98-state.json
+
+# rust
+target/
+build.log
+**/*.rs.bk
+*.pdb
+
+# python (legacy reference — not published)
+python-legacy/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.venv/
+venv/
+.python-version
+
+# editor / os
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.swp
+
+CLAUDE.MD
+

@@ -1,0 +1,42 @@
+# hash98-miner config. Copy to miner.toml (gitignored) and edit. Anything here can also be set via
+# HASH98_* environment variables (env wins). PRIVATE KEYS GO IN [accounts].keys_file OR THE
+# HASH98_PRIVATE_KEY ENV VAR — NEVER IN THIS FILE.
+
+[network]
+# A reliable RPC matters. Public ones (the defaults) are rate-limited; use your own node or a paid
+# provider for serious mining. ws_url (optional) gives faster new-block detection.
+rpc_url = "https://ethereum-rpc.publicnode.com"
+rpc_fallbacks = ["https://eth.llamarpc.com", "https://rpc.ankr.com/eth", "https://eth.drpc.org"]
+# ws_url = "wss://ethereum-rpc.publicnode.com"
+chain_id = 1
+contract = "0x1E5adF70321CA28b3Ead70Eac545E6055E969e6f"
+poll_interval_s = 4.0
+request_timeout_s = 6.0
+
+[gpu]
+devices = "all"          # "all", or e.g. [0, 1]
+# local_size = 64        # OpenCL work-group size; 64 good on Ampere/RTX 30xx — try 128/256 on Ada/Blackwell
+unroll = "compact"       # "compact" (no unroll) | "full" (unroll 64 rounds, often best on Ada/Blackwell) | "auto" | an int
+                         # Run `hashminer bench --device all --unroll <x>` to find your card's sweet spot.
+
+[accounts]
+# Path to a file with ONE 0x-prefixed private key per line ('#' comments and blanks ignored). Each
+# wallet caps at 5 mints; fund each with a little ETH for gas (a mint() tx is ~55-60k gas).
+# keys_file = "keys.txt"
+min_gas_balance_eth = 0.0008   # skip a wallet whose ETH balance is below this
+skip_unfunded = true
+state_file = "hash98-state.json"   # persisted per-wallet mint progress (so restarts resume)
+# miner_address = "0x..."        # read-only / --dry-run identity if you don't configure any key
+
+[gas]
+priority_gwei = 1.0            # maxPriorityFeePerGas
+max_fee_gwei = 30.0           # skip a submission if base*mult + priority exceeds this
+base_fee_multiplier = 2.0
+gas_limit = 90000             # fixed gas limit (mint ~55-60k); set to a TOML `false`/remove to estimate_gas instead
+
+[behaviour]
+dry_run = false
+log_level = "INFO"
+submit_concurrency = 4
+verify_proof_onchain = true   # pre-flight a found nonce with the on-chain verifyProof() view before sending
+poll_idle_seconds = 20.0      # when all wallets are done/unfunded, re-check the chain this often

@@ -17,6 +17,7 @@ build.log
 
 # python (legacy reference — not published)
 python-legacy/
+README.python.md
 __pycache__/
 *.py[cod]
 *.egg-info/
